@@ -4,12 +4,12 @@ import { useState } from "react";
 
 export default function SearchResults() {
   const [searchResults, setSearchResults] = useState([
-    { title: "Result 1", description: "Description 1" },
+    { title: "Result 1", description: "This is a longer description for result 1. It needs to be longer to test the layout." },
     { title: "Result 2", description: "Description 2" },
     { title: "Result 3", description: "Description 3" }
   ]);
   return (
-    <div className="w-full max-w-4xl mx-auto mt-8">
+    <div className="w-full mx-auto max-w-xl mt-8">
       <h2 className="text-xl font-semibold mb-4">Search Results</h2>
       <div className="space-y-4">
         {searchResults.map((result, index) => (

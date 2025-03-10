@@ -5,7 +5,7 @@ import SearchResults from './SearchResults'
 export default function Search() {
     return (
         <div className="search-container">
-          <div className="search-input-container flex flex-row items-start justify-left">
+          <div className="search-input-container flex flex-row items-start justify-center">
             <SearchInput />
             <SearchButton />
           </div>

@@ -1,0 +1,13 @@
+version: "2"
+sync:
+  defaults:
+    ignore:
+      - .git
+      - node_modules
+  configs:
+    - container: frontend
+      alpha: ./frontend
+      beta: /app
+    - container: backend
+      alpha: ./backend
+      beta: /app

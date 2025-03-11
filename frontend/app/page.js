@@ -6,7 +6,7 @@ export default function Home() {
       <main className="flex flex-col flex-grow min-h-screen gap-8 row-start-1 items-center sm:items-start">
         <div className="flex items-center justify-center h-screen">
           <div className="text-center">
-            <h1 className="text-2xl font-bold mb-4">Search with Elasticsearch Embeddings</h1>
+            <h1 className="text-2xl font-bold mb-4">WITH DOCKER!!!!c Search with Elasticsearch Embeddings</h1>
             <Search />
           </div>
         </div>

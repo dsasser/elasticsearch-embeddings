@@ -12,6 +12,12 @@ services:
       - elasticsearch-data:/usr/share/elasticsearch/data
     networks:
       - app-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9200"]
+      interval: 30s
+      retries: 3
+      start_period: 30s
+      timeout: 30s
     deploy:
       resources:
         limits:
@@ -19,6 +25,7 @@ services:
         reservations:
           memory: 2g
   frontend:
+    container_name: nextjs
     build:
       context: ./frontend
       dockerfile: Dockerfile
@@ -31,6 +38,27 @@ services:
       - /app/node_modules
     depends_on:
       - elasticsearch
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 30s
+      retries: 3
+      start_period: 30s
+      timeout: 30s
+
+  crawler:
+    image: docker.elastic.co/integrations/crawler:${CRAWLER_VERSION:-latest}
+    container_name: crawler
+    volumes:
+      - ./backend/crawler/config:/app/config
+    networks:
+      - app-network
+    stdin_open: true 
+    tty: true
+    environment:
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
+      - ELASTICSEARCH_USERNAME=elastic
+      - ELASTICSEARCH_PASSWORD=elastic
+
 volumes:
   elasticsearch-data:
 

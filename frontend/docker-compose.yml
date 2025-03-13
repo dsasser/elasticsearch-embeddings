@@ -1,0 +1,22 @@
+services:
+  nextjs:
+    container_name: nextjs
+    build:
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - ELASTICSEARCH_URL=http://elasticsearch:${ES_PORT:-9200}
+    volumes:
+      - ./app:/app
+      - /app/node_modules
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 30s
+      retries: 3
+      start_period: 30s
+      timeout: 30s
+
+networks:
+  app-network:
+    driver: bridge

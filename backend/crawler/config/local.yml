@@ -1,0 +1,14 @@
+# Run the crawler locally.
+#
+# This config assumes that the crawler is running in a docker container named `crawler` and that Elasticsearch is running on the same machine.
+domains:
+  - url: http://localhost:3002
+
+output_sink: elasticsearch
+output_index: local-index
+
+elasticsearch:
+  host: http://elasticsearch
+  port: 9200
+  username: elastic
+  password: elastic

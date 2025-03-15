@@ -33,7 +33,7 @@
 #
 #
 ##  The password for the Elasticsearch connection.
-##    Using `password` requires `username` to also be configured.
+##    Using `password` requirces `username` to also be configured.
 ##    However, `elasticsearch.api_key` is the recommended configuration choice.
 #elasticsearch.password: changeme
 #

@@ -1,35 +1,45 @@
 "use client";
 
 import SearchInput from './SearchInput'
-import SearchButton from './SearchButton'
 import SearchResults from './SearchResults'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 export default function Search() {
-  const [searchResults, setSearchResults] = useState([]);
-  const [searchInput, setSearchInput] = useState('');
-  const [searchClicked, setSearchClicked] = useState(false)
+  const searchParams = useSearchParams();
+  const router = useRouter();
   
-  const getResults = () => {
-    setSearchResults([
-      { title: "Result 1", description: "Description 1 that is longer than the others. It is a longer description that is longer than the others. It is a longer description that is longer than the others." },
-      { title: "Result 2", description: "Description 2" },
-      { title: "Result 3", description: "Description 3" }
-    ]);
-    setSearchClicked(true);
-  }
-  
-    return (
-      <div className="search-container">
-        <div className="search-input-container flex flex-row items-start justify-center">
-          <SearchInput searchInput={searchInput} setSearchInput={setSearchInput}/>
-          <SearchButton getResults={getResults} />
-        </div>
-        <div className="search-results-container flex flex-row items-start justify-left">
-          {searchClicked && searchResults.length > 0 && (
-            <SearchResults searchResults={searchResults} />
-          )}
-        </div>
-      </div>
-    )
+  // Get the query from URL (if available).
+  const initialQuery = searchParams.get('q') || '';
+
+  const [query, setQuery] = useState(initialQuery);
+  const [results, setResults] = useState([]);
+ 
+  // Fetch results when the query changes.
+  useEffect(() => {
+    if (query) {
+      fetch(`/api/search?q=${query}`)
+        .then(res => res.json())
+        .then(data => setResults(data));
+    }
+  }, [query]);
+
+    // Update URL when a new search happens.
+  const handleSearch = (newQuery) => {
+     // Prevent redundant updates.
+    if (query === newQuery) return;
+    setQuery(newQuery);
+    // Construct the query string manually.
+    const params = new URLSearchParams({ q: newQuery });
+    router.push(`/?${params.toString()}`, { scroll: false });
+  };
+
+  return (
+    <div className="search-container">
+      <SearchInput query={query} onSearch={handleSearch}/>
+        {query && results.length > 0 && (
+          <SearchResults results={results} />
+        )}
+    </div>
+  )
 }

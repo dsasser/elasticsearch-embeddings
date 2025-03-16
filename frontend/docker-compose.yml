@@ -1,8 +1,5 @@
 services:
   nextjs:
-    depends_on:
-      es01:
-        condition: service_healthy
     container_name: nextjs
     build:
       dockerfile: Dockerfile

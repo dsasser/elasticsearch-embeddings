@@ -134,24 +134,11 @@ services:
     networks:
       - app-network
 
-  crawler:
-    image: docker.elastic.co/integrations/crawler:${CRAWLER_VERSION:-latest}
-    container_name: crawler
-    volumes:
-      - ./../crawler/config:/app/config
-    stdin_open: true 
-    tty: true
-    environment:
-      - ELASTICSEARCH_URL=https://es01:${ES_PORT:-9200}
-      - ELASTICSEARCH_USERNAME=elastic
-      - ELASTICSEARCH_PASSWORD=${ELASTIC_PASSWORD}
-      - ELASTICSEARCH_SSL_CERTIFICATEAUTHORITIES=config/certs/ca/ca.crt
-
 networks:
   app-network:
     name: app-network
     external: true
-
+    
 volumes:
   certs:
     driver: local

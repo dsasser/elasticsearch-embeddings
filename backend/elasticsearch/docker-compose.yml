@@ -53,7 +53,8 @@ services:
       interval: 1s
       timeout: 5s
       retries: 120
-
+    networks:
+      - app-network
   es01:
     depends_on:
       setup:
@@ -97,7 +98,8 @@ services:
       interval: 10s
       timeout: 10s
       retries: 120
-
+    networks:
+      - app-network
   kibana:
     depends_on:
       es01:
@@ -129,6 +131,8 @@ services:
       interval: 10s
       timeout: 10s
       retries: 120
+    networks:
+      - app-network
 
   crawler:
     image: docker.elastic.co/integrations/crawler:${CRAWLER_VERSION:-latest}
@@ -144,9 +148,10 @@ services:
       - ELASTICSEARCH_SSL_CERTIFICATEAUTHORITIES=config/certs/ca/ca.crt
 
 networks:
-  default:
+  app-network:
     name: app-network
-    external: false
+    external: true
+
 volumes:
   certs:
     driver: local

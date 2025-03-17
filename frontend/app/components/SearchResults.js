@@ -1,7 +1,6 @@
 "use client";
 
-export default function SearchResults({results}) {
-
+export default function SearchResults({results}) {  
   return (
     <div className="search-results-container w-full mx-auto max-w-xl mt-8 text-left">
       {results.length > 0 ? (

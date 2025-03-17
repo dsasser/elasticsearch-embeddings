@@ -11,7 +11,7 @@ export default function Home() {
       </main>
       <footer className="flex gap-6 flex-wrap items-center justify-center p-4 bg-gray-800 text-white">
         <p>
-          <a href="https://github.com/jason-m-hicks/elasticsearch-embeddings">
+          <a href="https://github.com/dsasser/elasticsearch-embeddings">
             View the code on GitHub
           </a>
         </p>

@@ -14,23 +14,29 @@ export default function Search() {
 
   const [query, setQuery] = useState(initialQuery);
   const [results, setResults] = useState([]);
- 
-  // Fetch results when the query changes.
+  const [index, setIndex] = useState('va-gov-index');
+
+  // Fetch results when the query or index changes.
   useEffect(() => {
-    if (query) {
-      fetch(`/api/search?q=${query}`)
-        .then(res => res.json())
-        .then(data => setResults(data));
-    }
-  }, [query]);
+    if (!query || !index) return;
+  
+    console.log(`Fetching results for query: ${query} on index: ${index}`);
+  
+    fetch(`/api/search?q=${query}&i=${index}`)
+      .then(res => res.json())
+      .then(data => {
+        console.log("Search Results:", data); // Debug log
+        setResults(data);
+      })
+      .catch(err => console.error("Fetch error:", err));
+  }, [query, index]);
 
     // Update URL when a new search happens.
-  const handleSearch = (newQuery) => {
-     // Prevent redundant updates.
-    if (query === newQuery) return;
+  const handleSearch = (newQuery, newIndex) => {
     setQuery(newQuery);
+    setIndex(newIndex);
     // Construct the query string manually.
-    const params = new URLSearchParams({ q: newQuery });
+    const params = new URLSearchParams({ q: newQuery, i: newIndex});
     router.push(`/?${params.toString()}`, { scroll: false });
   };
 

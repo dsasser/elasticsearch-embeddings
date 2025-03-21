@@ -9,9 +9,9 @@ export default function SearchInput({query, onSearch}) {
     setInput(query);
   }, [query]);
 
-  const handleClick = (newIndex) => {
+  const handleClick = () => {
     if (!input.trim()) return;
-    onSearch(input, newIndex);
+    onSearch(input);
   };
 
   return (
@@ -19,32 +19,21 @@ export default function SearchInput({query, onSearch}) {
       <div className="search-input">
         <label hidden={true} htmlFor="search">Search</label>
         <input 
+          id="search"
           value={input} 
           onChange={(e) => setInput(e.target.value)} 
           className="mr-1 border-2 border-gray-300 rounded-md p-2" 
           type="text" 
           placeholder="Search" 
         />
+        <label hidden={true} htmlFor="search-button">Search with Elastic full text search and OpenAI embeddings</label>
         <button 
           type="submit"
+          id="search-button"
           className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
-          onClick={() => handleClick('va-gov-index')}
+          onClick={handleClick}
         >
           Search
-        </button>
-        <button 
-          type="submit" 
-          className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
-          onClick={() => handleClick('va_documents_ollama')}
-        >
-          Search Ollama
-        </button>
-        <button 
-          type="submit" 
-          className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
-          onClick={() => handleClick('va_documents_openai')}
-        >
-          Search OpenAI
         </button>
       </div>
     </div>

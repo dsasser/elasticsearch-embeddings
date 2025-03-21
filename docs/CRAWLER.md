@@ -3,17 +3,30 @@ The crawler needs several things in order to operate:
 - Crawler configuration
 - Elasticsearch API key
 - Elasticsearch SSL fingerprint (if using SSL on Elasticsearch)
-- Ingestion pipeline.
+- Ingestion pipeline
 - Elasticsearch index
 
 ## Crawler Configuration
 The crawler has example configurations in the [examples]('./crawler/config/examples) folder. More can be found in the [Open Web Crawler repo](https://github.com/elastic/crawler).
 
+**Important: make sure you set the pipeline to the one you created when setting up Elasticsearch.** See [ELASTICSEARCH.md](./ELASTICSEARCH.md)
+
+Example:
+
+```yml
+elasticsearch:
+  host: https://localhost
+  port: 9200
+  # etc.
+  pipeline: openai_embeddings_pipeline # pipeline defined here
+  pipeline_enabled: true
+```
+
 ## Create an Elasticsearch API Key
 Create an API key using the curl command below. Note is has more permissions than it needs, so only use this for local development. For production key permissions see the [Open Web Crawler](https://github.com/elastic/crawler) documentation.
 
 ``` sh
-curl -k -X POST -u elastic:<your_password> https://localhost:9200/_security/api_key \
+curl -X POST -u elastic:<your_password> --cacert=/path/to/elastic/ca.crt https://localhost:9200/_security/api_key \
   -H 'Content-Type: application/json' -d '{
     "name": "crawler-api-key",
     "role_descriptors": {
@@ -56,44 +69,18 @@ elasticsearch:
   ca_fingerprint: AB:CD:EF:12:34:...
 ```
 
-# Ingestion Pipeline
-Create an ingestion pipeline.
+# Ingest Pipeline
+See [Elasticsearch README.md](../../elasticsearch/README.md)
 
-```sh
-curl -k -X PUT -u elastic:<your_password> \
-  https://localhost:9200/_ingest/pipeline/ent-search-generic-ingestion \
-  -H 'Content-Type: application/json' \
-  -d '{
-    "description": "Generic ingestion pipeline for the crawler",
-    "processors": [
-      {
-        "set": {
-          "field": "last_crawled_at",
-          "value": "{{_ingest.timestamp}}"
-        }
-      }
-    ]
-  }'
-```
 
 # Define Index
-You should define the index so it has the proper `last_crawled_at` date property:
+See [Elasticsearch README.md](../../elasticsearch/README.md)
 
-```sh
-curl -k -X PUT -u elastic:<your_password> https://localhost:9200/local-index \
--H 'Content-Type: application/json' \
--d '{
-  "mappings": {
-    "properties": {
-      "last_crawled_at": {
-        "type": "date"
-      }
-    }
-  }
-}'
-```
 # Running
-To run the crawler, ensure it is running in docker, and execute the `crawl` command. You need to pass the config as the first argument. eg:
+First, run the docker service using docker compose:
+`docker compose -f docker-compose.yml up`
+
+Then start a crawl inside the docker container by executing the `crawl` command. You need to pass the path to the config as the second argument. eg:
 
 ```sh
 docker exec -it crawler bin/crawler crawl config/local.yml

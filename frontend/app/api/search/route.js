@@ -34,7 +34,13 @@ export async function GET(request) {
       query: {
         multi_match: {
           query,
-          fields: ['title^3', 'meta_description', 'content^2']
+          fields: ['title^3', 'meta_description', 'body^2']
+        }
+      },
+      "_source": ["body", "title", "meta_description", "url"],
+      "highlight": {
+        "fields": {
+          "body": {}
         }
       }
     }
@@ -50,8 +56,10 @@ export async function GET(request) {
       title: hit._source.title,
       description: hit._source.meta_description,
       url: hit._source.url,
-      content: hit._source.content
+      content: hit._source.body,
+      highlight: hit.highlight.body
     }));
+    // console.log(results);
     return NextResponse.json(results);
   } catch (error) {
     console.error('Elasticsearch Error:', error);

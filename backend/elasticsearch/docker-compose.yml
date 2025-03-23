@@ -137,7 +137,6 @@ services:
 networks:
   app-network:
     name: app-network
-    external: true
     
 volumes:
   certs:

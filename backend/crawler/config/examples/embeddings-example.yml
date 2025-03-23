@@ -1,0 +1,19 @@
+# This is an example config for the crawling a government site and storing results in Elasticsearch.
+# We leverage a pipeline that is configured to retrieve embeddings from OpenAI to store in the index in a dense vector field.
+# If you used the Quickstart guide, you should have already created the pipeline..
+domains:
+  - url: https://www.va.gov
+    sitemap_urls:
+      - https://www.va.gov/sitemap.xml
+
+output_sink: elasticsearch
+output_index: site-index
+max_crawl_depth: 2
+
+elasticsearch:
+  host: https://es01
+  port: 9200
+  api_key: <the openai api key from your .env file>
+  ca_fingerprint: <the certificate fingerprint for your elasticsearch instance>
+  pipeline: openai_embeddings_pipeline # This needs to match the pipeline name in your .env file.
+  pipeline_enabled: true

@@ -94,7 +94,7 @@ You should see a json reponse like this:
 ### 6) Create Elasticsearch API key For the Crawler
 This is optional. You can continue to use the superuser account 'elastic' and the related ELASTIC_PASSWORD for the crawler, that will not fly in production, so you should create an Elasticsearc API key for the crawler and use that in your crawler config rather than the username/password pair.
 
-```
+```sh
 ./scripts/create-crawler-key.sh
 ```
 

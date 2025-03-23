@@ -1,7 +1,9 @@
 #/bin/bash
 
+# Inject environment variables from the .env file.
 set -a
 source .env
+set +a
 
 ## Create index for Open Web Crawler.
 curl -X PUT -u "elastic:${ELASTIC_PASSWORD}" --cacert ./certs/es01/es01.crt  "https://localhost:${ES_PORT}/${ES_INDEX}" \
@@ -33,5 +35,3 @@ curl -X PUT -u "elastic:${ELASTIC_PASSWORD}" --cacert ./certs/es01/es01.crt  "ht
       }
     }
   }'
-
-set +a

@@ -175,6 +175,8 @@ cython_debug/
 # Elasticsearch
 elasticsearch/data*
 certs
+ca.crt
 
 # Crawler
 va.yml
+backend/crawler/config/private

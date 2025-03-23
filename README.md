@@ -7,13 +7,11 @@ Hybrid search combining Elasticsearch's powerful keyword search with OpenAI embe
 Scalable and customizable to handle large datasets
 
 ## Technologies Used:
-Elasticsearch
-Kibana
-OpenAI Embeddings API
-Open Web Crawler
-Next.js for the frontend
-
-This project is intended to provide an open-source solution for a hybrid search leveraging AI embeddings, with potential applications in government websites, e-commerce, and content-heavy platforms.
+- Elasticsearch
+- Kibana
+- OpenAI Embeddings API
+- Open Web Crawler
+- Next.js for the frontend
 
 ## Quick Start Guide
 
@@ -25,7 +23,7 @@ This project is intended to provide an open-source solution for a hybrid search 
 ### 1) Setup Environment Variables
 Copy the `env.example` from the project root and rename it `.env`.
 
-At a minimum, set the `ELASTIC_PASSWORD`, `KIBANA_PASSWORD`, and `ENCRYPTION_KEY` variables. Elasticsearch and Kibana will not start without them.
+Create a strong password for Elasticsearch and Kibana users. Populate the respective `ELASTIC_PASSWORD` and`KIBANA_PASSWORD` environment variables in your .env. Create an encryption key that is at least 32 characters. Elasticsearch and Kibana will not start without them.
 
 ### 2) Start the Elastic Stack
 The first startup will start the 'setup', 'es01', and 'kibana' services from the `backend/elasticsearch/docker-compose.yml` configuration.

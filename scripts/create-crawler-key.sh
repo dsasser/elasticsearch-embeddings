@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Load environment variables from .env file
+# Inject environment variables from the .env file.
 set -a
 source .env
 set +a

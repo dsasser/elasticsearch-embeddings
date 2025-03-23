@@ -1,10 +1,14 @@
+# Open Web Crawler for Elasticsearch
+Open Crawler enables users to easily ingest web content into Elasticsearch
+
+See https://github.com/elastic/crawler
+
 # Setup
 
 ## Prerequisites
-- Ensure the crawler configuration file is located in backend/crawler/config (or a subdirectory).
 - An Elasticsearch API key with adequate permissions.
-- The Elasticsearch SSL fingerprint
-- An existing Elasticsearch ingestion pipeline name.
+- The Elasticsearch certificate fingerprint
+- The name of the Elasticsearch ingestion pipeline to use during ingest.
 
 ## Crawler Configuration
 There is an [example](./../../backend/crawler/config/examples/crawler.yml.example) configuration in the [examples](./../../backend/crawler/config/examples/) folder which you should review. It contains all configuration options and descriptions of each. Have a look at the [simple.yml](./../../backend/crawler/config/examples/simple.yml) configuration example as well which contains only the necessary configurations to get a crawl going.
@@ -20,22 +24,9 @@ Create your own crawler configuration for the site you wish to crawl and place i
 
 
 ## Create an Elasticsearch API Key
-Create an API key using the curl command below. Note is has more permissions than it needs, so only use this for local development. For production key permissions see the [Open Web Crawler](https://github.com/elastic/crawler) documentation.
+Run the [create crawler key](../scripts/create-crawler-key.sh) script from the root of this project.
 
-``` sh
-curl -X POST -u elastic:<your_password> --cacert=/path/to/elastic/ca.crt https://localhost:9200/_security/api_key \
-  -H 'Content-Type: application/json' -d '{
-    "name": "crawler-api-key",
-    "role_descriptors": {
-      "crawler-role": {
-        "cluster": ["all"],
-        "index": [{"names":["*"],"privileges":["all"]}]
-      }
-    }
-'
-```
-
-Copy the key and place it in your crawler config in the`elasticsearch` portion. eg:
+Copy the 'encoded' key and place it in your crawler config in the`elasticsearch` portion. eg:
 
 ```yaml
 elasticsearch:
@@ -45,7 +36,7 @@ elasticsearch:
 ```
 
 ## Get Elasticsearch SSL Fingerprint
-The fingerprint is necessary if you are using SSL on Elasticsearch. To get the fingerprint:
+The crawler uses the certificate fingerprint for SSL. Use the below command to get the fingerprint from the Elasticsearch certificate.
 
 ```sh
 docker exec -it elasticsearch-es01-1 \
@@ -65,13 +56,6 @@ elasticsearch:
   api_key: somestringoftext==
   ca_fingerprint: AB:CD:EF:12:34:...
 ```
-
-# Ingest Pipeline
-See [Elasticsearch README.md](../../elasticsearch/README.md)
-
-
-# Define Index
-See [Elasticsearch README.md](../../elasticsearch/README.md)
 
 # Running
 First, run the docker service using docker compose:

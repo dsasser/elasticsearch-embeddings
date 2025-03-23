@@ -1,26 +1,23 @@
 # Setup
-The crawler needs several things in order to operate:
-- Crawler configuration
-- Elasticsearch API key
-- Elasticsearch SSL fingerprint (if using SSL on Elasticsearch)
-- Ingestion pipeline
-- Elasticsearch index
+
+## Prerequisites
+- Ensure the crawler configuration file is located in backend/crawler/config (or a subdirectory).
+- An Elasticsearch API key with adequate permissions.
+- The Elasticsearch SSL fingerprint
+- An existing Elasticsearch ingestion pipeline name.
 
 ## Crawler Configuration
-The crawler has example configurations in the [examples]('./crawler/config/examples) folder. More can be found in the [Open Web Crawler repo](https://github.com/elastic/crawler).
+There is an [example](./../../backend/crawler/config/examples/crawler.yml.example) configuration in the [examples](./../../backend/crawler/config/examples/) folder which you should review. It contains all configuration options and descriptions of each. Have a look at the [simple.yml](./../../backend/crawler/config/examples/simple.yml) configuration example as well which contains only the necessary configurations to get a crawl going.
 
-**Important: make sure you set the pipeline to the one you created when setting up Elasticsearch.** See [ELASTICSEARCH.md](./ELASTICSEARCH.md)
+Create your own crawler configuration for the site you wish to crawl and place it in the `backend/crawler/config` directory.
 
-Example:
+**Important: The following configuration options need to match the values in your .env file.**
 
-```yml
-elasticsearch:
-  host: https://localhost
-  port: 9200
-  # etc.
-  pipeline: openai_embeddings_pipeline # pipeline defined here
-  pipeline_enabled: true
-```
+| Crawler key    | ENV variable |
+| -------- | ------- |
+| output_index | ES_INDEX |
+| api_key | ES_API_KEY |
+
 
 ## Create an Elasticsearch API Key
 Create an API key using the curl command below. Note is has more permissions than it needs, so only use this for local development. For production key permissions see the [Open Web Crawler](https://github.com/elastic/crawler) documentation.

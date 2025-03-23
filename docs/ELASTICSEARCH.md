@@ -1,10 +1,13 @@
-# Elasticsearch with OpenAI Embeddings and Open Web Crawler
+# Elasticsearch with OpenAI Embeddings and Elastic Open Web Crawler
 
-The below assumes your elastic server is reachable at https://localhost:9200 and has SSL enabled.
+The below assumes your elastic server is reachable at https://localhost:9200 from your host and Elasticsearch has security enabled.
 
-Create your index with the below mappings if you are using the Open Web Crawler.
+## When you start Elasticsearch for the first time, TLS is configured automatically for the HTTP layer. A CA certificate is generated and stored on disk at:
+`/etc/elasticsearch/certs/http_ca.crt`
+
+## Create index for Open Web Crawler.
 ```sh
-curl -X PUT -u elastic:<your_password> --cacert=/path/to/elastic/ca.crt https://localhost:9200/<your-index-name> \
+curl -X PUT -u <your_username:<your_password> --cacert=/path/to/elastic/ca.crt https://localhost:9200/<your-index-name> \
   -H 'Content-Type: application/json' -d '{
     "mappings": {
       "properties": {
@@ -89,6 +92,9 @@ curl -X PUT -u elastic:<your_password> --cacert=/path/to/elastic/ca.crt https://
 }'
 ```
 
+
 ## References
+- https://www.elastic.co/guide/en/elasticsearch/reference/current/security-privileges.html
+- https://www.elastic.co/guide/en/elasticsearch/reference/current/configuring-stack-security.html#_connect_clients_to_elasticsearch_5
 - https://colab.research.google.com/github/elastic/elasticsearch-labs/blob/main/notebooks/search/07-inference.ipynb#scrollTo=f9101eb9
 - https://www.elastic.co/guide/en/elasticsearch/reference/current/semantic-search-inference.html

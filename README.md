@@ -26,12 +26,13 @@ Copy the `env.example` from the project root and rename it `.env`.
 Create a strong password for Elasticsearch and Kibana users. Populate the respective `ELASTIC_PASSWORD` and`KIBANA_PASSWORD` environment variables in your .env. Create an encryption key that is at least 32 characters. Elasticsearch and Kibana will not start without them.
 
 ### 2) Start the Elastic Stack
-The first startup will start the 'setup', 'es01', and 'kibana' services from the `backend/elasticsearch/docker-compose.yml` configuration.
+The first time we start the Elastic stack, a setup proceedure (composer service) will get Elasticsearch and Kibana configured, so the process takes a few minutes.
 
 Run:
 ```sh
- `./scripts/start-elastic.sh --build`.
+./scripts/start-elastic.sh --build
 ```
+Once the container stops logging things to the terminal, you can test access to both Kibana and Elasticsearch by logging into Kibana at https://localhost:5601. Login with the 'elastic' user and the ELASTIC_PASSWORD value from your .env file.
 
 ### 3) Copy Certificates to Host
 Elasticsearch has security enabled, and only responds to HTTPS requests. Here we copy those certs to your host so that we can leverage them in clients like CURL.
@@ -124,3 +125,7 @@ You should get this response:
 ```json
 {"acknowledged":true}
 ```
+
+## 9) Crawler Setup
+Setup your crawler config. There is a good example in the crawler config directory called `embeddings-example.yml` that you may want to start with. Follow the setup instructions in the [crawler](./docs/CRAWLER.md) readme.
+

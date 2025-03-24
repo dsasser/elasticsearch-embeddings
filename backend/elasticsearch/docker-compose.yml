@@ -60,6 +60,7 @@ services:
       setup:
         condition: service_healthy
     image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
+    container_name: elasticsearch
     labels:
       co.elastic.logs/module: elasticsearch
     volumes:
@@ -105,6 +106,7 @@ services:
       es01:
         condition: service_healthy
     image: docker.elastic.co/kibana/kibana:${STACK_VERSION}
+    container_name: kibana
     labels:
       co.elastic.logs/module: kibana
     volumes:

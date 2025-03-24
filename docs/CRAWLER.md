@@ -13,7 +13,7 @@ See https://github.com/elastic/crawler
 ## Crawler Configuration
 There is an [example](./../../backend/crawler/config/examples/crawler.yml.example) configuration in the [examples](./../../backend/crawler/config/examples/) folder which you should review. It contains all configuration options and descriptions of each. Have a look at the [simple.yml](./../../backend/crawler/config/examples/simple.yml) configuration example as well which contains only the necessary configurations to get a crawl going.
 
-Create your own crawler configuration for the site you wish to crawl and place it in the `backend/crawler/config` directory.
+Create your own crawler configuration for the site you wish to crawl and place it in the `backend/crawler/config/private` directory.
 
 **Important: The following configuration options need to match the values in your .env file.**
 
@@ -38,10 +38,15 @@ elasticsearch:
 ## Get Elasticsearch SSL Fingerprint
 The crawler uses the certificate fingerprint for SSL. Use the below command to get the fingerprint from the Elasticsearch certificate.
 
+If you haven't already, run the `copy-certs.sh` script which brings the certs into the `./certs` directory.
+
 ```sh
-docker exec -it elasticsearch-es01-1 \
-  openssl x509 -fingerprint -sha256 -noout \
-  -in /usr/share/elasticsearch/config/certs/es01/es01.crt
+./scripts/copy-certs.sh
+```
+
+Then run the following command:
+```sh
+openssl x509 -fingerprint -sha256 -noout -in certs/es01/es01.crt
 ```
 
 It will return something like:
@@ -57,12 +62,17 @@ elasticsearch:
   ca_fingerprint: AB:CD:EF:12:34:...
 ```
 
+
+
 # Running
 First, run the docker service using docker compose:
-`docker compose -f docker-compose.yml up`
+
+```sh
+./scripts/start-crawler.sh
+```
 
 Then start a crawl inside the docker container by executing the `crawl` command. You need to pass the path to the config as the second argument. eg:
 
 ```sh
-docker exec -it crawler bin/crawler crawl config/local.yml
+docker exec -it crawler bin/crawler crawl <path to your config in the container>
 ```

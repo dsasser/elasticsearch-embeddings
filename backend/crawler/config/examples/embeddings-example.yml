@@ -2,9 +2,17 @@
 # We leverage a pipeline that is configured to retrieve embeddings from OpenAI to store in the index in a dense vector field.
 # If you used the Quickstart guide, you should have already created the pipeline..
 domains:
-  - url: https://www.va.gov
+  - url: https://www.example.com
     sitemap_urls:
-      - https://www.va.gov/sitemap.xml
+      - https://www.example.com/sitemap.xml
+    seed_url: https://www.example.com/resources/
+    crawl_rules:
+      - policy: allow
+        type: begins
+        pattern: /resources
+      - policy: deny
+        type: regex
+        pattern: .*
 
 output_sink: elasticsearch
 output_index: site-index

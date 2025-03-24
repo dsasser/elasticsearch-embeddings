@@ -23,7 +23,7 @@ Scalable and customizable to handle large datasets
 ### 1) Setup Environment Variables
 Copy the `env.example` from the project root and rename it `.env`.
 
-Create a strong password for Elasticsearch and Kibana users. Populate the respective `ELASTIC_PASSWORD` and`KIBANA_PASSWORD` environment variables in your .env. Create an encryption key that is at least 32 characters. Elasticsearch and Kibana will not start without them.
+Create a strong password for Elasticsearch and Kibana users and use them to populate the respective `ELASTIC_PASSWORD` and`KIBANA_PASSWORD` environment variables in your .env. Create an encryption key that is at least 32 characters. Elasticsearch and Kibana will not start without them.
 
 ### 2) Start the Elastic Stack
 The first time we start the Elastic stack, a setup proceedure (composer service) will get Elasticsearch and Kibana configured, so the process takes a few minutes.

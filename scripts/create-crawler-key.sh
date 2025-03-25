@@ -18,7 +18,7 @@ curl --cacert ./certs/es01/es01.crt \
         "indices": [
           {
             "names": ["'"${ES_INDEX}"'"],
-            "privileges": ["monitor"]
+            "privileges": ["create", "index", "read", "write", "view_index_metadata"]
           }
         ]
       }
@@ -50,5 +50,5 @@ create_superuser_key() {
     }'
 }
 
-# Uncomment below if you want to create the superuser key
+# Uncomment below if you want to create a superuser key
 #create_superuser_key

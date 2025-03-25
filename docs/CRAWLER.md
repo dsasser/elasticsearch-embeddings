@@ -62,3 +62,24 @@ To crawl a site, execute the `crawl` command. The crawl runs from within the Doc
 ```sh
 docker exec -it crawler bin/crawler crawl config/private/your-config.yml
 ```
+
+If everything is working, you will see something like this:
+
+```sh
+[crawl:67e20e61d4355cd42b0b844f] [primary] Initialized an in-memory URL queue for up to 10000 URLs
+[crawl:67e20e61d4355cd42b0b844f] [primary] ES connections will be authorized with configured API key
+[crawl:67e20e61d4355cd42b0b844f] [primary] ES connections will use SSL with ca_fingerprint
+[crawl:67e20e61d4355cd42b0b844f] [primary] Connected to ES at https://es01:9200 - version: 8.17.3; build flavor: default
+[crawl:67e20e61d4355cd42b0b844f] [primary] Index [site-index] was found!
+[crawl:67e20e61d4355cd42b0b844f] [primary] Elasticsearch sink initialized for index [site-index] with pipeline [openai_embeddings_pipeline]
+[crawl:67e20e61d4355cd42b0b844f] [primary] Starting the primary crawl with up to 10 parallel thread(s)...
+[crawl:67e20e61d4355cd42b0b844f] [primary] Crawl status: queue_size=0, pages_visited=1, urls_allowed=1, urls_denied={:rule_engine_denied=>1, :already_seen=>1}, crawl_duration_msec=902, crawling_time_msec=502.0, avg_response_time_msec=502.0, active_threads=1, http_client={:max_connections=>100, :used_connections=>1}, status_codes={"200"=>1}
+```
+
+Crawling may take a long time, depending on the size of the site. However, when complete the crawler will log a successfull result similar to this:
+
+```sh
+[crawl:67e20f82d4355c2696ef954e] [primary] Finished a crawl. Result: success; Successfully finished the primary crawl with an empty crawl queue | Skipped purge crawl as no outdated documents were found.
+```
+
+Congradulations, your site has been crawled and indexed into Elasticsearch using machine learning Embeddings with OpenAI. See the README to build the search frontent using NextJS.

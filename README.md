@@ -93,9 +93,9 @@ The Open Web Crawler needs to be able to write to the index to create, delete, a
 Copy the 'encoded' key to the `ES_API_KEY` value in your .env file.
 
 ### Setup the Elasticsearch Inference Endpoint
-This creates the inference endpoint which will perform the call to the OpenAI Embeddings API during document ingest using the `text-embedding-ada-002` model from OpenAI. [doc](./docs/EMBEDDINGS.md).
+This creates the inference endpoint which will perform the call to the OpenAI Embeddings API during document ingest using the `text-embedding-ada-002` model from OpenAI.
 
-**This inference API will encure costs!**
+**Using this inference endpoint will incure OpenAI API costs**
 
 ```sh
 ./scripts/create-openai-inference-endpoint.sh

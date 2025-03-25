@@ -11,48 +11,42 @@ Scalable and customizable to handle large datasets
 - Kibana
 - OpenAI Embeddings API
 - Open Web Crawler
-- Next.js for the frontend
+- Next.js
 
-## Quick Start Guide
+## Quickstart Guide
 
 ### Prerequisites
 - Docker (tested on 20.10.14)
 - Docker Compose (tested on 2.27.1)
 - An OpenAI [API Key](https://platform.openai.com/api-keys). This is used for embeddings during site crawling and when performing searches from the NextJS application. There are costs involved, but they are minimal for testing purposes. See the [EMBEDDINGS](./docs/EMBEDDINGS.md) doc for more info about how to use alternatives to OpenAI.
 
-### 1) Setup Environment Variables
+### Setup Environment Variables
 Copy the `env.example` from the project root and rename it `.env`.
 
-Create a strong password for Elasticsearch and Kibana users and use them to populate the respective `ELASTIC_PASSWORD` and`KIBANA_PASSWORD` environment variables in your .env. Create an encryption key that is at least 32 characters. Elasticsearch and Kibana will not start without them.
+Provide a value for every variable that is not commented out. You should also evaluate the memory variables like `KB_MEM_LIMIT` to ensure they will work in your environment. You can ignore the port variables unless you have a reason to change them.
 
-### 2) Start the Elastic Stack
-The first time we start the Elastic stack, a setup proceedure (composer service) will get Elasticsearch and Kibana configured, so the process takes a few minutes.
+### Start the Elastic Stack
+Starting the Elastic stack for the first time
 
-Run:
 ```sh
 ./scripts/start-elastic.sh --build
 ```
-Once the container stops logging things to the terminal, you can test access to both Kibana and Elasticsearch by logging into Kibana at https://localhost:5601. Login with the 'elastic' user and the ELASTIC_PASSWORD value from your .env file.
 
-### 3) Copy Certificates to Host
-Elasticsearch has security enabled, and only responds to HTTPS requests. Here we copy those certs to your host so that we can leverage them in clients like CURL.
+Once complete, you should be able to access Kibana by in at https://localhost:5601. Use username  'elastic' and the `ELASTIC_PASSWORD` from your .env.
+
+### Copy Certificates to Host
+Elasticsearch has TLS security enabled, and the initial setup created a self-signed certificate, which we need in order to use the the REST API. Run the below script to copy the certificates to your host system. The certificates will be copied to the `./certs` folder.
 
 ```sh
 ./scripts/copy-certs.sh
 ```
 
-This will copy Elasic and Kibana certs to the `./certs` directory.
-
-### 4) Test Elasticsearh from the Terminal
+### Test Elasticsearh API
+Tests that you can communicate with Elasticsearch using curl from the command line. This validates that the certificate and user credentials are correct.
 
 ```sh
 ./scripts/test-elastic.sh
 ```
-
-If you get `curl: (60) SSL certificate problem: unable to get local issuer certificate` you didn't pass the correct SSL certificate. Check that you have a `./certs/es01/es01.crt` file and you are running the script from the project root.
-
-If you get a json response with `missing authentication credentials for REST request`, the password was not correct. Check the ELASTIC_PASSWORD in your .env.
-
 You should receive a response like this:
 
 ```json
@@ -75,12 +69,11 @@ You should receive a response like this:
 }
 ```
 
-### 5) Create an Elasticsearch Index
-This index has specific mappings for the Open Web Crawler and also adds a 'dense_vector' field named 'embeddings' where we will story the embedding vector data from the OpenAI Embeddings API.
+### Create Elasticsearch Index
+This index has specific mappings for the Open Web Crawler, which adds a 'dense_vector' field named 'embeddings' where we will store the embedding vector data from the OpenAI Embeddings API.
 
-**Make sure you have a ES_INDEX variable set in your .env.**
+**Make sure you have the ES_INDEX variable set in your .env.**
 
-Run:
 ```sh
 ./scripts/create-index.sh
 ```
@@ -90,17 +83,17 @@ You should see a json reponse like this:
 {"acknowledged":true,"shards_acknowledged":true,"index":"site-index"}%
 ```
 
-### 6) Create Elasticsearch API key For the Crawler
-This is optional. You can continue to use the superuser account 'elastic' and the related ELASTIC_PASSWORD for the crawler, that will not fly in production, so you should create an Elasticsearc API key for the crawler and use that in your crawler config rather than the username/password pair.
+### Create API Key for Crawler
+The Open Web Crawler needs to be able to write to the index to create, delete, and update documents. Run this command to create the API key.
 
 ```sh
 ./scripts/create-crawler-key.sh
 ```
 
-This should provide a response that includes an 'encoded' key. Copy this to your your ES_API_KEY value in your .env file. You will also need to put it in your crawler config, since environment variables cannot be injected there.
+Copy the 'encoded' key to the `ES_API_KEY` value in your .env file.
 
-### 7) Setup the Elasticsearch Inference Endpoint
-This creates the inference endpoint which will perform the call to the OpenAI Embeddings API during document ingest using the 'text-embedding-ada-002' model. Read more about why I chose this model and other options you have in the embeddings [doc](./docs/EMBEDDINGS.md).
+### Setup the Elasticsearch Inference Endpoint
+This creates the inference endpoint which will perform the call to the OpenAI Embeddings API during document ingest using the `text-embedding-ada-002` model from OpenAI. [doc](./docs/EMBEDDINGS.md).
 
 **This inference API will encure costs!**
 
@@ -108,13 +101,13 @@ This creates the inference endpoint which will perform the call to the OpenAI Em
 ./scripts/create-openai-inference-endpoint.sh
 ```
 
-You should see this response:
+You should see a response like this:
 
 ```json
 {"inference_id":"openai_embeddings","task_type":"text_embedding","service":"openai","service_settings":{"model_id":"text-embedding-ada-002","similarity":"dot_product","dimensions":1536,"rate_limit":{"requests_per_minute":3000}},"chunking_settings":{"strategy":"sentence","max_chunk_size":250,"sentence_overlap":1}}%
 ```
 
-### 8) Setup the Embeddings Pipeline
+### Setup the Embeddings Pipeline
 Now we need to setup a new pipeline that will leverage the inference processor. The crawler will leverage this pipeline during document ingest.
 
 ```sh
@@ -126,6 +119,14 @@ You should get this response:
 {"acknowledged":true}
 ```
 
-## 9) Crawler Setup
-Setup your crawler config. There is a good example in the crawler config directory called `embeddings-example.yml` that you may want to start with. Follow the setup instructions in the [crawler](./docs/CRAWLER.md) readme.
+## Open Web Crawler
+Follow the setup instructions in the [Crawler](./docs/CRAWLER.md) readme. This will get it configured and indexing your content.
 
+## Search Site
+Spin up the NextJS application to build the search site:
+
+```
+./scripts/start-next.sh
+```
+
+Once complete you can visit the site at http://localhost:3000 and execute searches against your Elasticsearch instance using semantic queries!

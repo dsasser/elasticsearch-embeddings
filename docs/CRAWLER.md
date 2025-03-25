@@ -11,40 +11,28 @@ See https://github.com/elastic/crawler
 - The name of the Elasticsearch ingestion pipeline to use during ingest.
 
 ## Crawler Configuration
-There is an [example](./../../backend/crawler/config/examples/crawler.yml.example) configuration in the [examples](./../../backend/crawler/config/examples/) folder which you should review. It contains all configuration options and descriptions of each. Have a look at the [simple.yml](./../../backend/crawler/config/examples/simple.yml) configuration example as well which contains only the necessary configurations to get a crawl going.
+Copy the [embeddings-example.yml](./../backend/crawler/config/examples/elasticsearch.yml.example) configuration to the `backend/crawler/config/private` directory and rename it something meaningful for your project.
 
-Create your own crawler configuration for the site you wish to crawl and place it in the `backend/crawler/config/private` directory.
-
-**Important: The following configuration options need to match the values in your .env file.**
-
-| Crawler key    | ENV variable |
-| -------- | ------- |
-| output_index | ES_INDEX |
-| api_key | ES_API_KEY |
-
+There are a lot of configuration options for both the crawler and elasticsearch. Review the [Open Web Crawler documentation](https://github.com/elastic/crawler) for more information on how to tweak your config beyond the example.
 
 ## Create an Elasticsearch API Key
-Run the [create crawler key](../scripts/create-crawler-key.sh) script from the root of this project.
+To communicate with Elasticsearch, the crawler needs an API key. Create a key y running the below script
 
-Copy the 'encoded' key and place it in your crawler config in the`elasticsearch` portion. eg:
+```sh
+./scripts/create-crawler-key.sh
+```
+Copy the 'encoded' key and place it in your crawler config in the `elasticsearch` section. eg:
 
 ```yaml
 elasticsearch:
   host: https://es01
   port: 9200
-  api_key: someAPIkey1234==
+  api_key: someAPIkey1234== #API key goes here
 ```
 
 ## Get Elasticsearch SSL Fingerprint
-The crawler uses the certificate fingerprint for SSL. Use the below command to get the fingerprint from the Elasticsearch certificate.
+The crawler uses the certificate fingerprint in API calls to Elasticsearch. Use the below command to get the fingerprint from the Elasticsearch SSL certificate.
 
-If you haven't already, run the `copy-certs.sh` script which brings the certs into the `./certs` directory.
-
-```sh
-./scripts/copy-certs.sh
-```
-
-Then run the following command:
 ```sh
 openssl x509 -fingerprint -sha256 -noout -in certs/es01/es01.crt
 ```
@@ -58,21 +46,19 @@ Copy everything after the `=` sign and put it in your crawler config under the `
 elasticsearch:
   host: https://es01
   port: 9200
-  api_key: somestringoftext==
-  ca_fingerprint: AB:CD:EF:12:34:...
+  api_key: someAPIkey1234==
+  ca_fingerprint: AB:CD:EF:12:34:... # Fingerprint goes here
 ```
 
-
-
 # Running
-First, run the docker service using docker compose:
+The crawler service runs in Docker. To start the service run this:
 
 ```sh
 ./scripts/start-crawler.sh
 ```
 
-Then start a crawl inside the docker container by executing the `crawl` command. You need to pass the path to the config as the second argument. eg:
+To crawl a site, execute the `crawl` command. The crawl runs from within the Docker container, so the path to your config is relative to its root directory. If you placed your config in the suggested folder, `backend/crawler/config/private`, your command would look like this (replacing the config name with your own).
 
 ```sh
-docker exec -it crawler bin/crawler crawl <path to your config in the container>
+docker exec -it crawler bin/crawler crawl config/private/your-config.yml
 ```

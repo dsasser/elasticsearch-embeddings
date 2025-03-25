@@ -1,18 +1,9 @@
-# This is an example config for the crawling a government site and storing results in Elasticsearch.
-# We leverage a pipeline that is configured to retrieve embeddings from OpenAI to store in the index in a dense vector field.
-# If you used the Quickstart guide, you should have already created the pipeline..
+# This is an example config for the crawling a web site and storing results in Elasticsearch.
+# It is configured to use the ingest pipeline for OpenAI embeddings created while following the setup instructions in the Quickstart guide.
 domains:
   - url: https://www.example.com
     sitemap_urls:
       - https://www.example.com/sitemap.xml
-    seed_url: https://www.example.com/resources/
-    crawl_rules:
-      - policy: allow
-        type: begins
-        pattern: /resources
-      - policy: deny
-        type: regex
-        pattern: .*
 
 output_sink: elasticsearch
 output_index: site-index

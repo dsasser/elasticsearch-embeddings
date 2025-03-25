@@ -18,7 +18,7 @@ curl --cacert ./certs/es01/es01.crt \
         "indices": [
           {
             "names": ["'"${ES_INDEX}"'"],
-            "privileges": ["create", "index", "read", "write", "view_index_metadata"]
+            "privileges": ["manage", "create", "index", "read", "write", "view_index_metadata"]
           }
         ]
       }

@@ -174,7 +174,8 @@ cython_debug/
 
 # Elasticsearch
 elasticsearch/data*
-certs
+certs/*
+!certs/.gitkeep
 ca.crt
 
 # Crawler

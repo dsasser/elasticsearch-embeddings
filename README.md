@@ -32,10 +32,10 @@ Starting the Elastic stack for the first time
 ./scripts/start-elastic.sh --build
 ```
 
-Once complete, you should be able to access Kibana by in at https://localhost:5601. Use username  'elastic' and the `ELASTIC_PASSWORD` from your .env.
+Once complete, you should be able to access Kibana by in at http://localhost:5601. Use username  'elastic' and the `ELASTIC_PASSWORD` from your .env.
 
 ### Copy Certificates to Host
-Elasticsearch has TLS security enabled, and the initial setup created a self-signed certificate, which we need in order to use the the REST API. Run the below script to copy the certificates to your host system. The certificates will be copied to the `./certs` folder.
+We need the SSL and CA public signed certificates (produced by the initial Elasticsearch setup) in order to use the Elasticsearch REST APIs. Run the below script to copy the certificates to the `./certs` directory at the root of this repo.
 
 ```sh
 ./scripts/copy-certs.sh
@@ -119,14 +119,72 @@ You should get this response:
 {"acknowledged":true}
 ```
 
-## Open Web Crawler
-Follow the setup instructions in the [Crawler](./docs/CRAWLER.md) readme. This will get it configured and indexing your content.
+## Index Site Data
+In order to populate your new index, we use the Open Web Crawler to crawl a website and produce structured content in individual index documents.
+
+### Crawler Configuration
+Copy the [embeddings-example.yml](./../backend/crawler/config/examples/embeddings-example.yml) configuration to the `backend/crawler/config/private` directory and rename it something meaningful for your project.
+
+Modify the example as needed for your particular site.
+There are a many configuration options for both the crawler and elasticsearch. Review the [Open Web Crawler documentation](https://github.com/elastic/crawler) for more information on how to tweak your config for your needs.
+
+#### Set the Elasticsearch API Key
+Copy the ES_API_KEY value from your .env variable and paste into the `api_key` value of the `elasticsearch` section of your crawler config. eg:
+
+```yaml
+elasticsearch:
+  host: https://es01
+  port: 9200
+  api_key: someAPIkey1234== #API key goes here
+```
+
+#### Get Elasticsearch SSL Fingerprint
+The crawler uses the certificate fingerprint in API calls to Elasticsearch. Use the below command to get the fingerprint from the Elasticsearch SSL certificate.
+
+```sh
+openssl x509 -fingerprint -sha256 -noout -in certs/es01.crt
+```
+
+It will return something like:
+`SHA256 Fingerprint=AB:CD:EF:12:34:...`
+
+Copy everything after the `=` sign and put it in your crawler config under the `elasticsearch` key. eg:
+
+```yaml
+elasticsearch:
+  host: https://es01
+  port: 9200
+  api_key: someAPIkey1234==
+  ca_fingerprint: AB:CD:EF:12:34:... # Fingerprint goes here
+```
+
+Start the crawler service by running the below command. It spins up a docker container which we will use when executing a crawl.:
+
+```sh
+./scripts/start-crawler.sh
+```
+
+# Crawling
+
+To crawl a site, execute the `crawl` command. It runs from within the Docker container, so the path to your config is relative to its root directory. So if you placed your config in the suggested folder, `backend/crawler/config/private`, your command would look like this (replacing the config name with your own).
+
+```sh
+docker exec -it crawler bin/crawler crawl config/private/your-config.yml
+```
+
+Crawling may take a while, depending on the size of the site and your configuration options. When complete the crawler will log a successfull result similar to:
+
+```sh
+[crawl:67e20f82d4355c2696ef954e] [primary] Finished a crawl. Result: success; Successfully finished the primary crawl with an empty crawl queue | Skipped purge crawl as no outdated documents were found.
+```
+
+Congradulations! Your site has been crawled and indexed into Elasticsearch using machine learning Embeddings with OpenAI.
 
 ## Search Site
-Spin up the NextJS application to build the search site:
+Start the frontend search application in NextJS:
 
-```
+```sh
 ./scripts/start-next.sh
 ```
 
-Once complete you can visit the site at http://localhost:3000 and execute searches against your Elasticsearch instance using semantic queries!
+Once complete you can visit the site at http://localhost:3000

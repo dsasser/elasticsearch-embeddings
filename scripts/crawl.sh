@@ -5,4 +5,5 @@ set -a
 source .env
 set +a
 
-docker exec -it crawler bin/crawler crawl config/local.yml
+echo "Crawling using configuration $@"
+docker exec -it crawler bin/crawler crawl "$@"

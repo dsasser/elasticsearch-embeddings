@@ -6,7 +6,7 @@ source .env
 set +a
 
 ## Create index for Open Web Crawler.
-curl -X PUT -u "elastic:${ELASTIC_PASSWORD}" --cacert ./certs/es01/es01.crt  "https://localhost:${ES_PORT}/${ES_INDEX}" \
+curl -X PUT -u "elastic:${ELASTIC_PASSWORD}" --cacert ./certs/es01.crt  "https://localhost:${ES_PORT}/${ES_INDEX}" \
   -H 'Content-Type: application/json' -d '{
     "mappings": {
       "properties": {

@@ -3,7 +3,7 @@
 set -a
 source .env
 
-curl --cacert ./certs/es01/es01.crt \
+curl --cacert ./certs/es01.crt \
   -u "elastic:${ELASTIC_PASSWORD}" \
   -X GET "https://localhost:${ES_PORT}"
 

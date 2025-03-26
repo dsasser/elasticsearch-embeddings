@@ -5,7 +5,7 @@ set -a
 source .env
 set +a
 
-curl --cacert ./certs/es01/es01.crt \
+curl --cacert ./certs/es01.crt \
   -u "elastic:${ELASTIC_PASSWORD}" \
   -X PUT "https://localhost:9200/_inference/text_embedding/openai_embeddings" \
   -H 'Content-Type: application/json' \

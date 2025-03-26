@@ -6,7 +6,7 @@ source .env
 set +a
 
 # Create crawler API key
-curl --cacert ./certs/es01/es01.crt \
+curl --cacert ./certs/es01.crt \
   -u "elastic:${ELASTIC_PASSWORD}" \
   -X POST "https://localhost:${ES_PORT}/_security/api_key" \
   -H "Content-Type: application/json" \

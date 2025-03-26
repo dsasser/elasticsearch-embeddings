@@ -37,4 +37,3 @@ docker exec -it crawler bin/crawler crawl config/private/crawler-config.yml
 ```
 
 More details are available in the [Open Web Crawler](https://github.com/elastic/crawler) documentation.
-

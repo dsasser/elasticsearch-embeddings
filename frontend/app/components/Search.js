@@ -38,7 +38,7 @@ export default function Search() {
   return (
     <div className="search-container">
       <SearchInput query={query} onSearch={handleSearch}/>
-      <SearchResults results={results} />
+      <SearchResults results={results} query={query} />
     </div>
   )
 }

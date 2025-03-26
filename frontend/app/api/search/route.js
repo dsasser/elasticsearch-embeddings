@@ -12,7 +12,7 @@ export async function GET(request) {
       apiKey: process.env.ES_API_KEY
     },
     tls: {
-      ca: fs.readFileSync('/app/ca.crt'),
+      ca: fs.readFileSync('/app/certs/ca.crt'),
       rejectUnauthorized: false
     }
   })

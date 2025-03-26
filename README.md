@@ -79,13 +79,25 @@ max_crawl_depth: 2
 elasticsearch:
   host: https://es01
   port: 9200
-  api_key: <ES_API_KEY>
+  username: elastic
+  password: <ELASTIC_PASSWORD>
+  api_key: <api key>
   ca_fingerprint: <Fingerprint from certs/es01.crt>
   pipeline: openai_embeddings_pipeline
   pipeline_enabled: true
 ```
 
-Replace `<ES_API_KEY>` and `<Fingerprint>` with your actual credentials.
+Replace `<ELASTIC_PASSWORD>` and `<Fingerprint>` with your actual credentials.
+
+#### Using an API Key (Recommended)
+
+It is recommended to use an Elasticsearch API key instead of username/password authentication for enhanced security. Generate an API key by running:
+
+```bash
+./scripts/create-crawler-key.sh
+```
+
+Use the encoded key output in your crawler configuration as shown above (api_key). Remove the username and password keys.
 
 #### Run Crawler
 

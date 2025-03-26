@@ -59,8 +59,12 @@ export async function GET(request) {
       content: hit._source.body,
       highlight: hit.highlight.body
     }));
+
     // console.log(results);
-    return NextResponse.json(results);
+    return NextResponse.json({
+      total: hits.total?.value || 0,
+      results
+    });
   } catch (error) {
     console.error('Elasticsearch Error:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });

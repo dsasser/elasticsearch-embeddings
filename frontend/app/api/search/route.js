@@ -5,6 +5,7 @@ import OpenAI from 'openai'
 
 export async function GET(request) {
   const query = request.nextUrl.searchParams.get('q');
+  const page = request.nextUrl.searchParams.get('page') || 1;
   const index = process.env.ES_INDEX;
   const client = new Client({
     node: process.env.ELASTICSEARCH_URL,
@@ -27,15 +28,23 @@ export async function GET(request) {
     });
     return response.data[0].embedding;
   }
+  const embedded = await getOpenAIEmbedding(query);
   const searchQuery = {
     index,
     body: {
       size: 10,
+      from: (page - 1) * 10,
       query: {
         multi_match: {
           query,
           fields: ['title^3', 'meta_description', 'body^2']
         }
+      },
+      "knn": {
+        "field": "image-vector",
+        "query_vector": [-5, 9, -12],
+        "k": 10,
+        "num_candidates": 100
       },
       "_source": ["body", "title", "meta_description", "url"],
       "highlight": {

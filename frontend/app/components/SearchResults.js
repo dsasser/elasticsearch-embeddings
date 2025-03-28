@@ -4,7 +4,7 @@ function highlightText(highlight) {
   return "<span class='text-gray-400'>...</span>" +highlight;
 }
 
-export default function SearchResults({ results, query }) {
+export default function SearchResults({ results, query, page, setPage }) {
   if (!query) return null;
 
   if (!results || !results.results || results.results.length === 0) {
@@ -30,6 +30,34 @@ export default function SearchResults({ results, query }) {
           </div>
         ))}
       </div>
+      <Pagination total={total} page={page} setPage={setPage} />
+    </div>
+  );
+}
+
+function Pagination({ total, page, setPage }) {
+  const pageSize = 10;
+  const totalPages = Math.ceil(total / pageSize);
+
+  return (
+    <div className="flex justify-between items-center mt-6">
+      <button
+        onClick={() => setPage(page - 1)}
+        disabled={page <= 1}
+        className="px-3 py-1 bg-gray-700 text-white rounded disabled:opacity-50"
+      >
+        Prev
+      </button>
+      <span className="text-sm text-gray-400">
+        Page {page} of {totalPages}
+      </span>
+      <button
+        onClick={() => setPage(page + 1)}
+        disabled={page >= totalPages}
+        className="px-3 py-1 bg-gray-700 text-white rounded disabled:opacity-50"
+      >
+        Next
+      </button>
     </div>
   );
 }

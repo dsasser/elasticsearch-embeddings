@@ -6,10 +6,18 @@ function highlightText(highlight) {
   return "<span class='text-gray-400'>...</span>" + highlight;
 }
 
-function formatScore(score) {
-  // Cap the score at 1.0 (100%) and convert to percentage
-  const cappedScore = Math.min(score, 1.0);
-  return `${(cappedScore * 100).toFixed(1)}%`;
+function formatScore(score, mode) {
+  if (mode === 'semantic') {
+    // Semantic scores are 0-1, so cap and convert to percentage
+    const cappedScore = Math.min(score, 1.0);
+    return `${(cappedScore * 100).toFixed(1)}%`;
+  } else if (mode === 'keyword') {
+    // For keyword (BM25) scores, just show the raw score rounded to 2 decimals
+    return score.toFixed(2);
+  } else {
+    // For hybrid, show raw score since it's a combination
+    return score.toFixed(2);
+  }
 }
 
 function ScoreDisplay({ score, mode }) {
@@ -19,21 +27,19 @@ function ScoreDisplay({ score, mode }) {
     case 'semantic':
       return (
         <span className="text-sm text-gray-400 bg-gray-700 px-2 py-1 rounded">
-          Semantic Match: {formatScore(score)}
+          Semantic Match: {formatScore(score, mode)}
         </span>
       );
     case 'keyword':
       return (
         <span className="text-sm text-gray-400 bg-gray-700 px-2 py-1 rounded">
-          Relevance: {score}
+          Relevance: {formatScore(score, mode)}
         </span>
       );
     case 'hybrid':
-      // For hybrid, we might want to show both semantic and keyword components
-      // but for now just show combined score
       return (
         <span className="text-sm text-gray-400 bg-gray-700 px-2 py-1 rounded">
-          Match Score: {formatScore(score)}
+          Match Score: {formatScore(score, mode)}
         </span>
       );
     default:

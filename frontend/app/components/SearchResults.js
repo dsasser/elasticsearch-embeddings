@@ -23,6 +23,7 @@ export default function SearchResults({ results, query, page, setPage, searchMod
   }
   
   const { results: items, total } = results;
+  const shouldShowScore = searchMode === 'semantic' || searchMode === 'hybrid';
 
   return (
     <div 
@@ -60,7 +61,7 @@ export default function SearchResults({ results, query, page, setPage, searchMod
                   {result.title}
                 </a>
               </h3>
-              {result._score && (
+              {shouldShowScore && result._score && (
                 <span 
                   className="text-sm text-gray-400 bg-gray-700 px-2 py-1 rounded"
                   role="note"

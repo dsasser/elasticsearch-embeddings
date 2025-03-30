@@ -8,6 +8,7 @@ export async function GET(request) {
   const page = request.nextUrl.searchParams.get('page') || 1;
   const mode = request.nextUrl.searchParams.get('mode') || 'semantic';
   const index = process.env.ES_INDEX;
+  const pageSize = 25;
   const client = new Client({
     node: process.env.ELASTICSEARCH_URL,
     auth: {
@@ -35,8 +36,8 @@ export async function GET(request) {
   const searchQuery = {
     index,
     body: {
-      size: 10,
-      from: (page - 1) * 10,
+      size: pageSize,
+      from: (page - 1) * pageSize,
       "_source": ["body", "title", "meta_description", "url"],
       "highlight": {
         "fields": {

@@ -17,9 +17,9 @@ export default function Search() {
   } = useSearch();
 
   const modeDescriptions = {
-    semantic: "Best for natural language questions and finding conceptually related content, even when exact terms don't match",
-    keyword: "Best for finding exact terms or phrases, like product names or specific terminology",
-    hybrid: "Combines both approaches for a balance between exact matches and related content"
+    semantic: "Natural language & conceptually related content",
+    keyword: "Exact terms & specific phrases",
+    hybrid: "Combined semantic & keyword search"
   };
 
   const exampleQueries = {
@@ -36,9 +36,9 @@ export default function Search() {
         </div>
         
         {/* Search Mode Controls */}
-        <div className="flex flex-col items-center gap-1.5">
-          <div className="flex items-center gap-2 bg-gray-800/50 p-1.5 rounded-lg border border-gray-700/50">
-            <span className="text-xs text-gray-400 ml-1">Mode:</span>
+        <div className="flex items-center gap-3 justify-start">
+          <div className="flex items-center gap-2 bg-gray-800/50 px-2 py-1 rounded-lg border border-gray-700/50">
+            <span className="text-xs text-gray-400">Mode:</span>
             <select 
               value={searchMode}
               onChange={(e) => setSearchMode(e.target.value)}
@@ -50,17 +50,15 @@ export default function Search() {
             </select>
           </div>
           
-          <div className="flex flex-col items-center gap-1.5">
-            <p className="text-xs text-gray-500 max-w-md text-center">
-              {modeDescriptions[searchMode]}
-            </p>
+          <span className="text-xs text-gray-500">
+            {modeDescriptions[searchMode]}
             <button 
               onClick={() => handleSearch(exampleQueries[searchMode])}
-              className="px-3 py-1 text-xs bg-gray-800/70 text-gray-300 hover:bg-gray-700 rounded-full transition-all duration-150 hover:scale-[1.02] focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="ml-2 text-blue-400 hover:text-blue-300 hover:underline focus:outline-none"
             >
-              Try: &ldquo;{exampleQueries[searchMode]}&rdquo;
+              Try an example →
             </button>
-          </div>
+          </span>
         </div>
       </div>
 

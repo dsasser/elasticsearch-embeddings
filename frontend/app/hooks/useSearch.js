@@ -31,7 +31,7 @@ export function useSearch() {
     const params = new URLSearchParams({ 
       q: debouncedQuery, 
       page: page,
-      mode: searchMode 
+      mode: searchMode
     });
     router.push(`/?${params.toString()}`, { scroll: false });
 

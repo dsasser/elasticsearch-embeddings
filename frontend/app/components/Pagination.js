@@ -10,7 +10,7 @@
  */
 export default function Pagination({ total, page, setPage, pageSize = 10 }) {
   const totalPages = Math.ceil(total / pageSize);
-
+  console.log(total/pageSize);
   if (totalPages <= 1) return null;
 
   const handleKeyDown = (e, action) => {

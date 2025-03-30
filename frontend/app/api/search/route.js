@@ -5,10 +5,10 @@ import OpenAI from 'openai'
 
 export async function GET(request) {
   const query = request.nextUrl.searchParams.get('q');
-  const page = request.nextUrl.searchParams.get('page') || 1;
+  const page = parseInt(request.nextUrl.searchParams.get('page') || '1', 10);
   const mode = request.nextUrl.searchParams.get('mode') || 'semantic';
+  const PAGE_SIZE = 25; // Constant for results per page
   const index = process.env.ES_INDEX;
-  const pageSize = 25;
   const client = new Client({
     node: process.env.ELASTICSEARCH_URL,
     auth: {
@@ -36,8 +36,8 @@ export async function GET(request) {
   const searchQuery = {
     index,
     body: {
-      size: pageSize,
-      from: (page - 1) * pageSize,
+      size: PAGE_SIZE,
+      from: (page - 1) * PAGE_SIZE,
       "_source": ["body", "title", "meta_description", "url"],
       "highlight": {
         "fields": {
@@ -118,7 +118,8 @@ export async function GET(request) {
     return NextResponse.json({
       total: hits.total?.value || 0,
       results,
-      mode // Include the mode in the response
+      mode ,
+      pageSize: PAGE_SIZE// Include the mode in the response
     });
   } catch (error) {
     console.error('Elasticsearch Error:', error);

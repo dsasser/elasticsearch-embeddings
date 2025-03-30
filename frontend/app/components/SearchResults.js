@@ -58,7 +58,7 @@ export default function SearchResults({ results, query, page, setPage, searchMod
     );
   }
   
-  const { results: items, total } = results;
+  const { results: items, total, pageSize } = results;
 
   return (
     <div 
@@ -135,7 +135,7 @@ export default function SearchResults({ results, query, page, setPage, searchMod
           </article>
         ))}
       </div>
-      <Pagination total={total} page={page} setPage={setPage} />
+      <Pagination total={total} page={page} setPage={setPage} pageSize={pageSize} />
     </div>
   );
 }

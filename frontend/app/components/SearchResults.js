@@ -7,8 +7,38 @@ function highlightText(highlight) {
 }
 
 function formatScore(score) {
-  // Convert score to percentage for better readability
-  return `${(score * 100).toFixed(1)}%`;
+  // Cap the score at 1.0 (100%) and convert to percentage
+  const cappedScore = Math.min(score, 1.0);
+  return `${(cappedScore * 100).toFixed(1)}%`;
+}
+
+function ScoreDisplay({ score, mode }) {
+  if (!score) return null;
+
+  switch (mode) {
+    case 'semantic':
+      return (
+        <span className="text-sm text-gray-400 bg-gray-700 px-2 py-1 rounded">
+          Semantic Match: {formatScore(score)}
+        </span>
+      );
+    case 'keyword':
+      return (
+        <span className="text-sm text-gray-400 bg-gray-700 px-2 py-1 rounded">
+          Relevance: {score}
+        </span>
+      );
+    case 'hybrid':
+      // For hybrid, we might want to show both semantic and keyword components
+      // but for now just show combined score
+      return (
+        <span className="text-sm text-gray-400 bg-gray-700 px-2 py-1 rounded">
+          Match Score: {formatScore(score)}
+        </span>
+      );
+    default:
+      return null;
+  }
 }
 
 export default function SearchResults({ results, query, page, setPage, searchMode }) {
@@ -23,7 +53,6 @@ export default function SearchResults({ results, query, page, setPage, searchMod
   }
   
   const { results: items, total } = results;
-  const shouldShowScore = searchMode === 'semantic' || searchMode === 'hybrid';
 
   return (
     <div 
@@ -61,14 +90,8 @@ export default function SearchResults({ results, query, page, setPage, searchMod
                   {result.title}
                 </a>
               </h3>
-              {shouldShowScore && result._score && (
-                <span 
-                  className="text-sm text-gray-400 bg-gray-700 px-2 py-1 rounded"
-                  role="note"
-                  aria-label={`Semantic match score: ${formatScore(result._score)}`}
-                >
-                  Semantic Match: {formatScore(result._score)}
-                </span>
+              {result._score && (
+                <ScoreDisplay score={result._score} mode={searchMode} />
               )}
             </div>
             

@@ -16,29 +16,26 @@ export default function SearchInput({query, onSearch}) {
   };
 
   return (
-    <div className="search-input-container flex flex-row items-start justify-center">
-      <div className="search-input">
-        <form onSubmit={handleSubmit}>
-          <label hidden={true} htmlFor="search">Search</label>
-          <input 
-            id="search"
-            value={input} 
-            onChange={(e) => setInput(e.target.value)} 
-            className="mr-1 border-2 border-gray-300 rounded-md p-2" 
-            type="text" 
-            placeholder="Search" 
-          />
-          <label hidden={true} htmlFor="search-button">Search with Elastic full text search and OpenAI embeddings</label>
-          <button 
-            type="submit"
-            id="search-button"
-            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
-          >
-            Search
-          </button>
-        </form>
-        
-      </div>
+    <div className="w-full">
+      <form onSubmit={handleSubmit} className="flex gap-2">
+        <label hidden={true} htmlFor="search">Search</label>
+        <input 
+          id="search"
+          value={input} 
+          onChange={(e) => setInput(e.target.value)} 
+          className="flex-1 min-w-0 border-2 border-gray-300 rounded-md p-2" 
+          type="text" 
+          placeholder="Search" 
+        />
+        <label hidden={true} htmlFor="search-button">Search with Elastic full text search and OpenAI embeddings</label>
+        <button 
+          type="submit"
+          id="search-button"
+          className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition whitespace-nowrap"
+        >
+          Search
+        </button>
+      </form>
     </div>
   )
 }

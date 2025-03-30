@@ -26,7 +26,7 @@ export default function SearchResults({ results, query, page, setPage, searchMod
 
   return (
     <div 
-      className="search-results-container w-full mx-auto max-w-2xl mt-8 text-left"
+      className="search-results-container w-full"
       role="region" 
       aria-label="Search results"
     >

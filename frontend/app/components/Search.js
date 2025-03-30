@@ -29,12 +29,14 @@ export default function Search() {
   };
 
   return (
-    <div className="search-container max-w-3xl mx-auto">
-      <div className="flex flex-col items-center gap-2">
-        <SearchInput query={query} onSearch={handleSearch}/>
+    <div className="w-full flex flex-col gap-4">
+      <div className="w-full flex flex-col gap-2">
+        <div className="w-full">
+          <SearchInput query={query} onSearch={handleSearch}/>
+        </div>
         
         {/* Search Mode Controls */}
-        <div className="flex flex-col items-center gap-1.5 mt-2">
+        <div className="flex flex-col items-center gap-1.5">
           <div className="flex items-center gap-2 bg-gray-800/50 p-1.5 rounded-lg border border-gray-700/50">
             <span className="text-xs text-gray-400 ml-1">Mode:</span>
             <select 
@@ -63,9 +65,9 @@ export default function Search() {
       </div>
 
       {/* Search Results or Loading State */}
-      <div className="mt-8">
+      <div className="w-full">
         {isLoading ? (
-          <div className="flex flex-col justify-center items-center min-h-[200px] gap-3">
+          <div className="w-full flex flex-col justify-center items-center min-h-[200px] gap-3">
             <div className="animate-spin rounded-full h-8 w-8 border-3 border-gray-300 border-t-blue-500"></div>
             <p className="text-sm text-gray-500">Searching...</p>
           </div>

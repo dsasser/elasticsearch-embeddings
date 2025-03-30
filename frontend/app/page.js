@@ -2,10 +2,10 @@ import Search from './components/Search'
 
 export default function Home() {
   return (
-    <div className="grid grid-rows-[1fr_auto] min-h-screen justify-items-center p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col flex-grow min-h-screen gap-8 row-start-1 items-center sm:items-start">
-          <div className="text-center">
-            <h1 className="text-2xl font-bold mb-4">Search with Elasticsearch Embeddings</h1>
+    <div className="grid grid-rows-[1fr_auto] min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+      <main className="flex flex-col flex-grow min-h-screen gap-8 row-start-1">
+          <div className="w-full max-w-3xl mx-auto">
+            <h1 className="text-2xl font-bold mb-4 text-center">Search with Elasticsearch Embeddings</h1>
             <Search />
           </div>
       </main>

@@ -24,8 +24,8 @@ export default function Search() {
 
   const exampleQueries = {
     semantic: "how to get started with installation",
-    keyword: "ERROR_CODE_5001 troubleshooting",
-    hybrid: "payment processing setup guide"
+    keyword: "Form 1010ez",
+    hybrid: "create an account guide"
   };
 
   return (

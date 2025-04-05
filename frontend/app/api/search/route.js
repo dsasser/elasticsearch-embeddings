@@ -26,7 +26,7 @@ export async function GET(request) {
 
   async function getOpenAIEmbedding(text) {
     const response = await openai.embeddings.create({
-      model: "text-embedding-ada-002",
+      model: "text-embedding-3-small",
       input: text
     });
     return response.data[0].embedding;

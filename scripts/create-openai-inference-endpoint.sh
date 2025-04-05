@@ -13,7 +13,7 @@ curl --cacert ./certs/es01.crt \
     "service": "openai",
     "service_settings": {
       "api_key": "'"${OPENAI_API_KEY}"'",
-      "model_id": "text-embedding-ada-002" 
+      "model_id": "text-embedding-3-small"
     }
   }
 '

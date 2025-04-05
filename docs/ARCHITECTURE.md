@@ -30,7 +30,7 @@ Open Web Crawler -> Elasticsearch Pipeline
 - Triggers embedding generation through Elasticsearch ingest pipelines.
 
 ### Embeddings (OpenAI)
-- Provides semantic embedding vectors using `text-embedding-ada-002`.
+- Provides semantic embedding vectors using `text-embedding-3-small`.
 - Integrated through Elasticsearch inference endpoints.
 
 ### Next.js Frontend

@@ -76,7 +76,7 @@ This mode attempts to balance exact matches with conceptually related content, m
   }
 }
 ```
-- Uses OpenAI's text-embedding-ada-002 model (1536 dimensions)
+- Uses OpenAI's text-embedding-3-small model (1536 dimensions)
 - Implements efficient KNN search using HNSW algorithm
 - Cosine similarity for vector comparison
 - Configurable k and num_candidates parameters
@@ -119,6 +119,7 @@ This mode attempts to balance exact matches with conceptually related content, m
     ]
   }
 }
+
 ```
 - Combines both approaches with configurable weights
 - Default 30/70 split between keyword and semantic relevance
@@ -198,4 +199,4 @@ This mode attempts to balance exact matches with conceptually related content, m
 3. **Continuous Improvement**
    - Adjust weights based on analytics
    - Update synonyms and stop words
-   - Fine-tune based on user behavior 
+   - Fine-tune based on user behavior

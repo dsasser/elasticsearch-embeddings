@@ -28,7 +28,7 @@ This project provides a hybrid semantic search solution by combining Elasticsear
 - Docker Compose (2.27+)
 - [OpenAI API Key](https://platform.openai.com/api-keys) (minimal costs involved)
 
-### 2. Setup Environment Variables
+### 2. Set Up Environment Variables
 Copy `env.example` to `.env` and provide required values:
 
 | Variable               | Description                            | Example      |
@@ -39,7 +39,7 @@ Copy `env.example` to `.env` and provide required values:
 | `ES_MEM_LIMIT`         | Elasticsearch max memory               | 4000000000   |
 | `ES_INDEX`             | Elasticsearch index name               | site-index   |
 
-### 3. Initialize Elasticsearch Stack
+### 3. Initialize the Elasticsearch Stack
 
 Run the setup script (creates Elasticsearch, Kibana, SSL certificates, and verifies connectivity):
 
@@ -62,7 +62,7 @@ Set up index, inference endpoint, and embedding pipeline:
 
 ### 5. Web Crawling and Indexing
 
-#### Configure Crawler
+#### Configure the Crawler
 
 Create your crawler configuration at `backend/crawler/config/private/crawler-config.yml`:
 
@@ -99,7 +99,7 @@ It is recommended to use an Elasticsearch API key instead of username/password a
 
 Use the encoded key output in your crawler configuration as shown above (api_key). Remove the username and password keys.
 
-#### Run Crawler
+#### Run the Crawler
 
 ```bash
 ./scripts/start-crawler.sh
@@ -107,7 +107,7 @@ Use the encoded key output in your crawler configuration as shown above (api_key
 docker exec -it crawler bin/crawler crawl config/private/crawler-config.yml
 ```
 
-### 6. Launch Frontend
+### 6. Launch the Frontend
 
 Start Next.js frontend:
 
@@ -142,7 +142,7 @@ Open Web Crawler -> Elasticsearch Pipeline
 
 - [Elasticsearch Configuration](./docs/ELASTICSEARCH.md)
 - [Embedding Models and Costs](./docs/EMBEDDINGS.md)
-- [Crawler Detailed Configuration](./docs/CRAWLER.md)
+- [Crawler Configuration](./docs/CRAWLER.md)
 
 ---
 

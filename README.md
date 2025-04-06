@@ -9,6 +9,7 @@ This project provides a hybrid semantic search solution by combining Elasticsear
 - **Hybrid Search:** Combines traditional Elasticsearch keyword queries with semantic embeddings.
 - **Scalable:** Optimized for indexing large volumes of website data.
 - **Flexible Embedding Options:** Uses OpenAI by default, with easy alternatives.
+- **Synthetic Data Generation:** Built-in tool for generating test data with semantic relationships.
 
 ---
 
@@ -18,6 +19,7 @@ This project provides a hybrid semantic search solution by combining Elasticsear
 - **OpenAI Embeddings API:** Semantic embedding generation.
 - **Open Web Crawler:** Web content ingestion.
 - **Next.js:** User-facing search interface.
+- **Synthetic Data Generator:** Python package for generating test data.
 
 ---
 
@@ -27,6 +29,7 @@ This project provides a hybrid semantic search solution by combining Elasticsear
 - Docker (20.10+)
 - Docker Compose (2.27+)
 - [OpenAI API Key](https://platform.openai.com/api-keys) (minimal costs involved)
+- Python 3.11+ (for synthetic data generation)
 
 ### 2. Set Up Environment Variables
 Copy `env.example` to `.env` and provide required values:
@@ -38,6 +41,9 @@ Copy `env.example` to `.env` and provide required values:
 | `OPENAI_API_KEY`       | OpenAI API key                         | key_1234567  |
 | `ES_MEM_LIMIT`         | Elasticsearch max memory               | 4000000000   |
 | `ES_INDEX`             | Elasticsearch index name               | site-index   |
+| `ES_URL`               | Elasticsearch URL                      | https://localhost:9200 |
+| `ES_API_KEY`           | Elasticsearch API key                  | your_api_key |
+| `ES_PIPELINE`          | Embeddings pipeline name               | openai_embeddings_pipeline |
 
 ### 3. Initialize the Elasticsearch Stack
 
@@ -60,11 +66,59 @@ Set up index, inference endpoint, and embedding pipeline:
 ./scripts/create-openai-embeddings-pipeline.sh
 ```
 
-### 5. Web Crawling and Indexing
+### 5. Data Generation Options
 
-#### Configure the Crawler
+#### Option 1: Synthetic Data (Recommended for Development)
 
-Create your crawler configuration at `backend/crawler/config/private/crawler-config.yml`:
+The synthetic data generator creates controlled, semantically related documents perfect for testing and development. No external dependencies or permissions needed.
+
+1. Set up Python environment:
+```bash
+# Create and activate a virtual environment
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Install the package
+pip install -e .
+```
+
+2. Generate synthetic data:
+```bash
+# Generate 100 documents and save to data/synthetic_data.json
+python scripts/generate-synthetic-data.py --num-documents 100
+
+# Generate with a specific seed for reproducibility
+python scripts/generate-synthetic-data.py --seed 42
+
+# Generate without indexing to Elasticsearch
+python scripts/generate-synthetic-data.py --no-index
+```
+
+Generated documents include:
+```json
+{
+  "id": "doc1",
+  "title": "Machine Learning in AI",
+  "content": "Machine learning is a AI technique that focuses on feature engineering...",
+  "category": "AI",
+  "tags": ["machine learning", "feature engineering", "AI"],
+  "type": "definition",
+  "difficulty": "intermediate",
+  "length": "short"
+}
+```
+
+#### Option 2: Web Crawling (Advanced/Production Use)
+
+⚠️ **Important Warning**: Web crawling should only be used with explicit permission from site owners. Unauthorized crawling may:
+- Violate terms of service
+- Overwhelm servers (potential DoS)
+- Be illegal in some jurisdictions
+- Result in IP bans
+
+If you have permission to crawl a site:
+
+1. Configure the crawler at `backend/crawler/config/private/crawler-config.yml`:
 
 ```yaml
 domains:
@@ -87,23 +141,14 @@ elasticsearch:
   pipeline_enabled: true
 ```
 
-Replace `<ELASTIC_PASSWORD>` and `<Fingerprint>` with your actual credentials.
-
-#### Using an API Key (Recommended)
-
-It is recommended to use an Elasticsearch API key instead of username/password authentication for enhanced security. Generate an API key by running:
-
+2. Generate an API key (recommended):
 ```bash
 ./scripts/create-crawler-key.sh
 ```
 
-Use the encoded key output in your crawler configuration as shown above (api_key). Remove the username and password keys.
-
-#### Run the Crawler
-
+3. Run the crawler:
 ```bash
 ./scripts/start-crawler.sh
-
 docker exec -it crawler bin/crawler crawl config/private/crawler-config.yml
 ```
 
@@ -145,6 +190,13 @@ Open Web Crawler -> Elasticsearch Pipeline
 - [Crawler Configuration](./docs/CRAWLER.md)
 
 ---
+
+## Contributing
+
+Contributions are welcome! Please:
+1. Fork the repository
+2. Create a feature branch
+3. Submit a pull request
 
 ## License
 

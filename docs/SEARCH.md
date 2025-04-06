@@ -79,7 +79,7 @@ This mode attempts to balance exact matches with conceptually related content, m
 - Uses OpenAI's text-embedding-3-small model (1536 dimensions)
 - Implements efficient KNN search using HNSW algorithm
 - Cosine similarity for vector comparison
-- Configurable k and num_candidates parameters
+- Configurable k and num_candidates parameters.
 
 ### Keyword Search
 ```json
@@ -171,7 +171,7 @@ This mode attempts to balance exact matches with conceptually related content, m
 
 1. **Vector Search**
    - HNSW index for fast KNN
-   - Configurable trade-off between speed and accuracy
+   - Configurable trade-offs between speed and accuracy
    - Memory usage scales with vector dimensions
 
 2. **Keyword Search**
@@ -187,7 +187,7 @@ This mode attempts to balance exact matches with conceptually related content, m
 ## Monitoring and Optimization
 
 1. **Search Quality**
-   - Track click-through rates by mode
+   - Track click-through rates for each mode
    - Monitor query patterns
    - Collect user feedback
 

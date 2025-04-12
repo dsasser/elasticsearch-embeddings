@@ -11,9 +11,9 @@ curl --cacert ./certs/es01.crt \
   -X POST "https://localhost:${ES_PORT}/_security/api_key" \
   -H "Content-Type: application/json" \
   -d '{
-    "name": "crawler-api-key",
+    "name": "embedding-api-key",
     "role_descriptors": { 
-      "crawler-role": {
+      "embedding-role": {
         "cluster": ["all"],
         "indices": [
           {
@@ -24,7 +24,7 @@ curl --cacert ./certs/es01.crt \
       }
     },
     "metadata": {
-      "application": "crawler"
+      "application": "embedding"
     }
   }'
 

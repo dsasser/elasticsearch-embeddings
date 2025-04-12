@@ -136,7 +136,7 @@ curl --cacert ./certs/es01.crt \
       "inference": {
         "model_id": "openai_embeddings",
         "input_output": {
-          "input_field": "body",
+          "input_field": "content",
           "output_field": "embedding"
         }
       }

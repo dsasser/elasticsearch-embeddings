@@ -45,4 +45,4 @@ def main():
         indexer.index_documents(documents)
 
 if __name__ == "__main__":
-    main() 
+    main()

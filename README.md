@@ -1,17 +1,13 @@
 # Elasticsearch Embeddings for Hybrid Search
 
-This project provides a hybrid semantic search solution by combining Elasticsearch keyword search with OpenAI-generated embeddings, resulting in more accurate and relevant search experiences, especially suited for large-scale websites.
-
----
+This project provides a hybrid semantic search solution by combining Elasticsearch keyword search with AI-generated embeddings, resulting in more accurate and relevant search experiences.
 
 ## Features
 
 - **Hybrid Search:** Combines traditional Elasticsearch keyword queries with semantic embeddings.
-- **Scalable:** Optimized for indexing large volumes of website data.
+- **Synthetic Data Generation:** Generate test data for development and testing.
+- **Web Crawling (Optional):** Index real website content with proper permissions.
 - **Flexible Embedding Options:** Uses OpenAI by default, with easy alternatives.
-- **Synthetic Data Generation:** Built-in tool for generating test data with semantic relationships.
-
----
 
 ## Technologies
 
@@ -21,15 +17,12 @@ This project provides a hybrid semantic search solution by combining Elasticsear
 - **Next.js:** User-facing search interface.
 - **Synthetic Data Generator:** Python package for generating test data.
 
----
-
 ## Quickstart Guide
 
 ### 1. Prerequisites
 - Docker (20.10+)
 - Docker Compose (2.27+)
 - [OpenAI API Key](https://platform.openai.com/api-keys) (minimal costs involved)
-- Python 3.11+ (for synthetic data generation)
 
 ### 2. Set Up Environment Variables
 Copy `env.example` to `.env` and provide required values:
@@ -39,10 +32,7 @@ Copy `env.example` to `.env` and provide required values:
 | `ELASTIC_PASSWORD`     | Elasticsearch admin password           | secure_pass! |
 | `KIBANA_PASSWORD`      | Kibana system user password            | secure_pass! |
 | `OPENAI_API_KEY`       | OpenAI API key                         | key_1234567  |
-| `ES_MEM_LIMIT`         | Elasticsearch max memory               | 4000000000   |
 | `ES_INDEX`             | Elasticsearch index name               | site-index   |
-| `ES_URL`               | Elasticsearch URL                      | https://localhost:9200 |
-| `ES_API_KEY`           | Elasticsearch API key                  | your_api_key |
 | `ES_PIPELINE`          | Embeddings pipeline name               | openai_embeddings_pipeline |
 
 ### 3. Initialize the Elasticsearch Stack
@@ -57,112 +47,57 @@ Run the setup script (creates Elasticsearch, Kibana, SSL certificates, and verif
 
 Check Kibana at [http://localhost:5601](http://localhost:5601). Login with user `elastic` and your `ELASTIC_PASSWORD`.
 
-### 4. Create Elasticsearch Resources
-Set up index, inference endpoint, and embedding pipeline:
+### 4. Create Elasticsearch API Key.
+
+This API KEY is used along with the CA certificate created during initial Elasticsearch setup in order to securely communicate with Elasticsearch APIs.
 
 ```bash
-./scripts/create-index.sh
+./scripts/create-es-api-key.sh
+```
+
+### 5. Set Up OpenAI Embeddings
+
+1. Create the OpenAI inference endpoint:
+```bash
 ./scripts/create-openai-inference-endpoint.sh
+```
+
+2. Create the embeddings pipeline:
+```bash
 ./scripts/create-openai-embeddings-pipeline.sh
 ```
 
-### 5. Data Generation Options
+### 5. Generate and Index Synthetic Data
 
-#### Option 1: Synthetic Data (Recommended for Development)
-
-The synthetic data generator creates controlled, semantically related documents perfect for testing and development. No external dependencies or permissions needed.
-
-1. Set up Python environment:
+1. Install the package and dependencies:
 ```bash
-# Create and activate a virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# Install the package
+python3.11 -m venv venv
+source venv/bin/activate
 pip install -e .
 ```
 
-2. Generate synthetic data:
+2. Generate and index synthetic data:
 ```bash
-# Generate 100 documents and save to data/synthetic_data.json
 python scripts/generate-synthetic-data.py --num-documents 100
-
-# Generate with a specific seed for reproducibility
-python scripts/generate-synthetic-data.py --seed 42
-
-# Generate without indexing to Elasticsearch
-python scripts/generate-synthetic-data.py --no-index
 ```
 
-Generated documents include:
-```json
-{
-  "id": "doc1",
-  "title": "Machine Learning in AI",
-  "content": "Machine learning is a AI technique that focuses on feature engineering...",
-  "category": "AI",
-  "tags": ["machine learning", "feature engineering", "AI"],
-  "type": "definition",
-  "difficulty": "intermediate",
-  "length": "short"
-}
-```
-
-#### Option 2: Web Crawling (Advanced/Production Use)
-
-⚠️ **Important Warning**: Web crawling should only be used with explicit permission from site owners. Unauthorized crawling may:
-- Violate terms of service
-- Overwhelm servers (potential DoS)
-- Be illegal in some jurisdictions
-- Result in IP bans
-
-If you have permission to crawl a site:
-
-1. Configure the crawler at `backend/crawler/config/private/crawler-config.yml`:
-
-```yaml
-domains:
-  - url: https://example.com
-    sitemap_urls:
-      - https://example.com/sitemap.xml
-
-output_sink: elasticsearch
-output_index: site-index
-max_crawl_depth: 2
-
-elasticsearch:
-  host: https://es01
-  port: 9200
-  username: elastic
-  password: <ELASTIC_PASSWORD>
-  api_key: <api key>
-  ca_fingerprint: <Fingerprint from certs/es01.crt>
-  pipeline: openai_embeddings_pipeline
-  pipeline_enabled: true
-```
-
-2. Generate an API key (recommended):
-```bash
-./scripts/create-crawler-key.sh
-```
-
-3. Run the crawler:
-```bash
-./scripts/start-crawler.sh
-docker exec -it crawler bin/crawler crawl config/private/crawler-config.yml
-```
+This will:
+- Generate 100 synthetic documents about AI topics
+- Save them to `data/synthetic_data.json`
+- Index them into Elasticsearch with embeddings
 
 ### 6. Launch the Frontend
 
 Start Next.js frontend:
-
 ```bash
 ./scripts/start-next.sh
 ```
 
 Access your search UI at [http://localhost:3000](http://localhost:3000).
 
----
+## Advanced: Web Crawling
+
+For indexing real website content, see [CRAWLER.md](./docs/CRAWLER.md) for detailed instructions. Note that web crawling should only be used with proper permissions and consideration for the target website's resources.
 
 ## Architecture Overview
 
@@ -173,7 +108,7 @@ User -> Next.js Frontend -> Elasticsearch API
                       Elasticsearch Index
                              ^
                              |
-Open Web Crawler -> Elasticsearch Pipeline
+Synthetic Data Generator -> Elasticsearch Pipeline
                         |
                         v
               OpenAI Embeddings API

@@ -15,7 +15,8 @@ class ElasticsearchIndexer:
         """Initialize the indexer with configuration from environment variables."""
         load_dotenv()
         
-        self.es_url = os.getenv('ES_URL', 'http://localhost:9200')
+        self.es_url = os.getenv('ES_URL', 'http://localhost')
+        self.es_port = os.getenv('ES_PORT', '9200')
         self.api_key = os.getenv('ES_API_KEY')
         self.index_name = os.getenv('ES_INDEX', 'site-index')
         self.pipeline_name = os.getenv('ES_PIPELINE', 'openai_embeddings_pipeline')
@@ -28,14 +29,14 @@ class ElasticsearchIndexer:
         parsed_url = urlparse(self.es_url)
         if parsed_url.scheme == 'https':
             self.client = Elasticsearch(
-                self.es_url,
+                f"{self.es_url}:{self.es_port}",
                 api_key=self.api_key,
                 ca_certs=self.cert_path,
                 verify_certs=True
             )
         else:
             self.client = Elasticsearch(
-                self.es_url,
+                f"{self.es_url}:{self.es_port}",
                 api_key=self.api_key,
                 verify_certs=False
             )

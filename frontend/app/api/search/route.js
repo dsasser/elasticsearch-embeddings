@@ -38,10 +38,11 @@ export async function GET(request) {
     body: {
       size: PAGE_SIZE,
       from: (page - 1) * PAGE_SIZE,
-      "_source": ["body", "title", "meta_description", "url"],
+      "_source": ["title", "content", "category", "type", "tags"],
       "highlight": {
         "fields": {
-          "body": {}
+          "content": {},
+          "title": {}
         }
       }
     }
@@ -67,7 +68,7 @@ export async function GET(request) {
       searchQuery.body.query = {
         multi_match: {
           query,
-          fields: ['title^3', 'meta_description', 'body^2']
+          fields: ['title^3', 'content^2', 'category', 'tags']
         }
       };
       break;
@@ -81,7 +82,7 @@ export async function GET(request) {
             {
               multi_match: {
                 query,
-                fields: ['title^3', 'meta_description', 'body^2'],
+                fields: ['title^3', 'content^2', 'category', 'tags'],
                 boost: 0.3
               }
             },
@@ -108,18 +109,22 @@ export async function GET(request) {
     const results = hits.hits.map(hit => ({
       id: hit._id,
       title: hit._source.title,
-      description: hit._source.meta_description,
-      url: hit._source.url,
-      content: hit._source.body,
-      highlight: hit?.highlight?.body || [],
-      _score: hit._score // Include the score for display
+      content: hit._source.content,
+      category: hit._source.category,
+      type: hit._source.type,
+      tags: hit._source.tags,
+      highlight: {
+        content: hit?.highlight?.content || [],
+        title: hit?.highlight?.title || []
+      },
+      _score: hit._score
     }));
 
     return NextResponse.json({
       total: hits.total?.value || 0,
       results,
-      mode ,
-      pageSize: PAGE_SIZE// Include the mode in the response
+      mode,
+      pageSize: PAGE_SIZE
     });
   } catch (error) {
     console.error('Elasticsearch Error:', error);
